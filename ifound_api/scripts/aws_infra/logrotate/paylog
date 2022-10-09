@@ -1,0 +1,17 @@
+/home/ubuntu/paylog/log/paylog_access.log {
+    daily
+    rotate 3
+    size 10M
+    dateformat -%Y%m%d
+    compress
+    delaycompress
+}
+
+/home/ubuntu/paylog/log/paylog_general.log {
+    daily
+    rotate 3
+    size 10M
+    dateformat -%Y%m%d
+    compress
+    delaycompress
+}

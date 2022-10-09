@@ -1,0 +1,6 @@
+{
+    "userRolesOpts": [
+        { "text": "Administrador", "value": "admin" },
+        { "text": "Usuário", "value": "user" }
+    ]
+}
