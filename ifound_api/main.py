@@ -39,13 +39,13 @@ app.add_middleware(
 
 from src.routes import users, payments, google_services 
 
-@app.get("/", summary="", tags=["Default"])
+@app.get("/", summary="", tags=["Pets"]) 
 def read_root():
     return {"iFound": "Backend"}
 
 
 
-@app.get('/pets')
+@app.get('/pets', tags=["Pets"])
 def all_pets():
     return jsonable_encoder({
         'status': 'success',
@@ -58,7 +58,7 @@ class Pet(BaseModel):
     raca: str
     vacinado: bool
 
-@app.post('/pets')
+@app.post('/pets', tags=["Pets"])
 def save_pets(pet: Pet):
     response_object = {'status': 'success'}
     PETS.append({
@@ -70,7 +70,7 @@ def save_pets(pet: Pet):
     response_object['message'] = 'Pet added!'
     return jsonable_encoder(response_object)
 
-@app.put('/pets/{pet_id}')
+@app.put('/pets/{pet_id}', tags=["Pets"])
 def update_pet(pet_id: int, pet: Pet):
     pet_for_update=[ pet for pet in PETS if pet['id'] == pet_id ][0]
     response_object = {'status': 'success'}
@@ -80,7 +80,7 @@ def update_pet(pet_id: int, pet: Pet):
     response_object['message'] = 'Pet updated!'
     return response_object
     
-@app.delete('/pets/{pet_id}')
+@app.delete('/pets/{pet_id}', tags=["Pets"])
 def delete_pet(pet_id: int):
     response_object = {'status': 'success'}
     for pet in PETS:

@@ -10,7 +10,7 @@
         </li>
 
         <li class="nav-item" v-on:click="collapseAll">
-          <router-link class="nav-link" :to="{name: 'bank_statement'}">
+          <router-link class="nav-link" :to="{name: 'animais'}">
             <i class="mdi mdi-paw menu-icon"></i>
             <span class="menu-title">Animais</span>
           </router-link>

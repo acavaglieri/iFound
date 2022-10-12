@@ -5,7 +5,6 @@ from fastapi import Depends
 from ..routes.get_db import get_db
 from ..database.database import Base
 
-
 class Payments(Base):
     __tablename__ = "payments"
 

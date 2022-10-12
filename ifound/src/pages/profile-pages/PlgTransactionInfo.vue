@@ -11,7 +11,7 @@
                   <h3 class="my-3 mx-3 text-center">Transação {{ transactionId }}</h3>
                 </b-col>
                 <b-col lg="1" class="py-3 d-none d-md-block">
-                  <router-link :to="{ name: 'bank_statement' }" style="color: black">
+                  <router-link :to="{ name: 'animais' }" style="color: black">
                     <h3><i class="mdi mdi-arrow-left"></i></h3>
                   </router-link>
                 </b-col>

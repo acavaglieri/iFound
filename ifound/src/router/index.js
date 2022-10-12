@@ -136,14 +136,14 @@ const router = new Router({
           meta: { requiresAuth: true }
         },
         {
-          path: "bank/statement",
-          name: "bank_statement",
-          component: () => import("@/pages/profile-pages/PlgBankStatement"),
+          path: "animais",
+          name: "animais",
+          component: () => import("@/pages/profile-pages/Animais"),
           meta: { requiresAuth: true }
         },
         {
-          path: "bank/statement/info",
-          name: "bank_statement_info",
+          path: "animais/info",
+          name: "animais_info",
           component: () => import("@/pages/profile-pages/PlgTransactionInfo"),
           meta: { requiresAuth: true }
         },

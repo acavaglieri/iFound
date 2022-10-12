@@ -10,8 +10,8 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Raca</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Raça</th>
               <th></th>
             </tr>
           </thead>
@@ -57,7 +57,7 @@
           </b-form-input>
         </b-form-group>
         <b-form-group id="form-raca-group"
-                      label="Raca:"
+                      label="Raça:"
                       label-for="form-raca-input">
             <b-form-input id="form-raca-input"
                           type="text"
@@ -88,7 +88,7 @@
           </b-form-input>
           </b-form-group>
           <b-form-group id="form-raca-edit-group"
-                      label="Raca:"
+                      label="Raça:"
                       label-for="form-raca-edit-input">
               <b-form-input id="form-raca-edit-input"
                           type="text"
@@ -299,7 +299,7 @@ export default {
                   <router-link
                     class="btn btn-warning btn-sm text-white mr-2 btn-fw"
                     :to="{
-                      name: 'bank_statement_info',
+                      name: 'animais_info',
                       params: {
                         id: data.item.id,
                         account_type: 'user',

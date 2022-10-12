@@ -11,7 +11,7 @@
           <thead>
             <tr>
               <th scope="col">Nome</th>
-              <th scope="col">Raca</th>
+              <th scope="col">Raça</th>
               <th scope="col">Vacinado contra raiva?</th>
               <th></th>
             </tr>
@@ -62,13 +62,13 @@
           </b-form-input>
         </b-form-group>
         <b-form-group id="form-raca-group"
-                      label="Raca:"
+                      label="Raça:"
                       label-for="form-raca-input">
             <b-form-input id="form-raca-input"
                           type="text"
                           v-model="addPetForm.raca"
                           required
-                          placeholder="Enter raca">
+                          placeholder="Enter raça">
             </b-form-input>
           </b-form-group>
         <b-form-group id="form-vacinado-group">
@@ -98,7 +98,7 @@
           </b-form-input>
           </b-form-group>
           <b-form-group id="form-raca-edit-group"
-                      label="Raca:"
+                      label="Raça:"
                       label-for="form-raca-edit-input">
               <b-form-input id="form-raca-edit-input"
                           type="text"
@@ -170,9 +170,9 @@ export default {
       });
     },
     initForm() {
-      this.addPetForm.nome = '';
-      this.addPetForm.raca = '';
-      this.addPetForm.vacinado = [];
+      //this.addPetForm.nome = '';
+      //this.addPetForm.raca = '';
+      //this.addPetForm.vacinado = [];
       this.editForm.id = '';
       this.editForm.nome = '';
       this.editForm.raca = '';
