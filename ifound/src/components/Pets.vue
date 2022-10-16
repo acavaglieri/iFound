@@ -1,18 +1,19 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col"> <!---sm-12-->
         <h1>Pets</h1>
         <hr><br><br>
         <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.pet-modal>Add Pet</button>
+        <button type="button" class="btn btn-success " v-b-modal.pet-modal>Add Pet</button><!--btn-sm-->
         <br><br>
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Nome</th>
+              <th scope="col ">Nome</th>
               <th scope="col">Raça</th>
               <th scope="col">Vacinado contra raiva?</th>
+              <th scope="col">QR-Code</th>
               <th></th>
             </tr>
           </thead>
@@ -23,6 +24,9 @@
               <td>
                 <span v-if="pet.vacinado">Yes</span>
                 <span v-else>No</span>
+              </td>
+              <td>
+                <qrcode-vue value= "pet.id" size="300" level="H" />
               </td>
               <td>
                 <div class="btn-group" role="group">
@@ -126,6 +130,7 @@
 <script>
 import axios from 'axios';
 import Alert from './Alert.vue';
+import QrcodeVue from 'qrcode.vue'
 
 export default {
   data() {
@@ -135,13 +140,15 @@ export default {
         nome: '',
         raca: '',
         vacinado: [],
+        QRValue: '',
       },
       message: '',    
       showMessage: false,
     };
   },
   components: {
-  alert: Alert,
+    alert: Alert,
+    QrcodeVue,
   },
   methods: {
     getPets() {

@@ -10,6 +10,9 @@
                 <div>
                   Olá {{ name }}
                 </div>
+                <div>
+                  Olá {{ email }}
+                </div>
               </span>
             </b-col>
             <b-col md="2" cols="4" class="text-right d-flex justify-content-end my-2">
@@ -75,8 +78,9 @@ export default {
       outsPercentage: null,
       tableFields: [],
       data: null,
-      eyeIcon: "mdi mdi-eye-off mdi-36px",
+      //eyeIcon: "mdi mdi-eye-off mdi-36px",
       name: localStorage.getItem('name'),
+      email: localStorage.getItem('email'),
     };
   },
   components: {
@@ -85,13 +89,18 @@ export default {
     //PlgAccountBalance,
     Pets,
   },
-  methods: {
+  mounted() {
+    this.environment = process.env.VUE_APP_ENVIRONMENT
+    this.version = process.env.VUE_APP_VERSION
+  },
+  /*methods: {
     goToFind() {
       this.$router.replace({name: 'pix_payment'})
     },
     goToReceive() {
       this.$router.replace({name: 'pix_generate_charge'})
     },
+    
     /*seePetInfo() {
       if (!this.showPetInfoCheck) {
         this.showPetInfoCheck = true;
@@ -108,8 +117,8 @@ export default {
     async calcPercentages(emit) {
       this.insPercentage = emit["insPercent"];
       this.outsPercentage = emit["outsPercent"];
-    },*/
-  },
+    },
+  },*/
 };
 </script>
 
