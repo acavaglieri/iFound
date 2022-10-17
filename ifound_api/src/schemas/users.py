@@ -66,6 +66,7 @@ class UserLoginRequest(StatusModel):
 class UserLoginResponse(BaseModel):
     email: str = None
     role: str = None
+    name: str = None
 
 class UserResetPassEmail(StatusModel):
     email: str

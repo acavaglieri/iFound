@@ -5,14 +5,16 @@
         <h1>Pets</h1>
         <hr><br><br>
         <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success " v-b-modal.pet-modal>Add Pet</button><!--btn-sm-->
+        <button type="button" class="btn btn-success " v-b-modal.pet-modal>Adicionar Pet</button><!--btn-sm-->
         <br><br>
+        
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col ">Nome</th>
-              <th scope="col">Raça</th>
-              <th scope="col">Vacinado contra raiva?</th>
+              <th scope="col">Raça/Tipo</th>
+              <th scope="col">ID-Teste</th>
+              <th scope="col">Vacinado contra raiva</th>
               <th scope="col">QR-Code</th>
               <th></th>
             </tr>
@@ -20,13 +22,14 @@
           <tbody>
             <tr v-for="(pet, index) in pets" :key="index">
               <td>{{ pet.nome }}</td>
-              <td>{{ pet.raca }}</td>   
+              <td>{{ pet.raca }}</td>
+              <td>{{ pet.id }}</td>   
               <td>
-                <span v-if="pet.vacinado">Yes</span>
-                <span v-else>No</span>
+                <span v-if="pet.vacinado">Sim</span>
+                <span v-else>Não</span>
               </td>
               <td>
-                <qrcode-vue value= "pet.id" size="300" level="H" />
+                <vue-qrcode :value="pet.id" :options="{ width: 200 }"></vue-qrcode>
               </td>
               <td>
                 <div class="btn-group" role="group">
@@ -35,13 +38,13 @@
                           class="btn btn-warning btn-sm"
                           v-b-modal.pet-update-modal
                           @click="editPet(pet)">
-                      Update
+                      Atualizar
                   </button>
                   <button
                           type="button"
                           class="btn btn-danger btn-sm"
                           @click="onDeletePet(pet)">
-                      Delete
+                      Deletar
                   </button>
                 </div>
               </td>
@@ -130,11 +133,12 @@
 <script>
 import axios from 'axios';
 import Alert from './Alert.vue';
-import QrcodeVue from 'qrcode.vue'
+import VueQrcode from '@chenfengyuan/vue-qrcode';
 
 export default {
   data() {
     return {
+      teste: 'pedro',
       pets: [],
       addPetForm: {
         nome: '',
@@ -148,7 +152,10 @@ export default {
   },
   components: {
     alert: Alert,
-    QrcodeVue,
+    VueQrcode,
+  },
+  created() {
+    this.getPets();
   },
   methods: {
     getPets() {
@@ -244,26 +251,23 @@ export default {
       this.$refs.addPetModal.hide();
       this.initForm();
     },
-  created() {
-    this.getPets();
+    removePet(petID) {
+        const path = `http://localhost:8000/pets/${petID}`;
+        axios.delete(path)
+        .then(() => {
+            this.getPets();
+            this.message = 'Pet removed!';
+            this.showMessage = true;
+        })
+        .catch((error) => {
+            // eslint-disable-next-line
+            console.error(error);
+            this.getPets();
+        });
+    },
+    onDeletePet(pet) {
+        this.removePet(pet.id);
+    },
   },
-  removePet(petID) {
-      const path = `http://localhost:8000/pets/${petID}`;
-      axios.delete(path)
-      .then(() => {
-          this.getPets();
-          this.message = 'Pet removed!';
-          this.showMessage = true;
-      })
-      .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          this.getPets();
-      });
-  },
-  onDeletePet(pet) {
-      this.removePet(pet.id);
-  },
-},
 };
 </script>

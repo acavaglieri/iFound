@@ -42,7 +42,8 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
     access_token = auth.create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    user_response = u_schemas.UserLoginResponse(role=user.role, email=user.email)
+    print(user.name)
+    user_response = u_schemas.UserLoginResponse(role=user.role, email=user.email, name=user.name)
     return t_schemas.Token(access_token=access_token, token_type="bearer", status="success", message="Logado com sucesso", user=user_response)
 
 @app.post("/user/xlsx/generate", tags=["Users"], dependencies=[Depends(auth.valid_ability_user)])

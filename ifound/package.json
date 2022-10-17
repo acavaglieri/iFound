@@ -30,7 +30,6 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "qrcode": "^1.4.4",
-    "qrcode.vue": "^3.3.3",
     "register-service-worker": "^1.7.1",
     "simple-line-icons": "^2.5.5",
     "ti-icons": "^0.1.2",
