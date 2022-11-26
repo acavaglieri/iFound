@@ -1,0 +1,93 @@
+version: '3.9'
+
+networks:
+  net-mariadb:
+  net-traefik:
+services:
+  ifound_portainer:
+    image: portainer/portainer-ce:latest
+    container_name: ifound_portainer
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./volumes/portainer:/data
+    networks:
+      - net-traefik
+    profiles:
+      - all
+      - staging
+      - production
+  ifound_mariadb:
+    image: mariadb:10.3.36
+    container_name: ifound_mariadb
+    restart: always
+    volumes:
+      - ./volumes/mariadb:/var/lib/mysql   
+      - ./scripts/mariadb/initdb.d:/docker-entrypoint-initdb.d   
+    networks:
+      - net-mariadb
+    profiles:
+      - all
+      - development
+      - staging
+  ifound_fastapi:
+    build: ifound_api
+    container_name: ifound_fastapi
+    restart: always
+    volumes:
+      - ./ifound_api:/ifound_api
+    networks:
+      - net-mariadb
+      - net-traefik
+    working_dir: /ifound_api
+    command: ./run.sh server-docker
+    profiles:
+      - all
+      - development
+      - staging
+      - production
+  ifound_traefik:
+    image: traefik:v2.8.7
+    container_name: ifound_traefik
+    restart: always
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./scripts/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./scripts/traefik/cert.crt:/etc/traefik/certs/cert.crt
+      - ./scripts/traefik/cert.key:/etc/traefik/certs/cert.key
+      - ./scripts/traefik/traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml
+    networks:
+      - net-traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    command: 
+      - --providers.docker
+      # Enables the web UI and tells Traefik to listen to docker
+      - --api.dashboard=true 
+      - --api.insecure=true
+    profiles:
+      - all
+      - staging
+      - production
+  ifound_vue:
+    image: node:14.19.2-buster-slim
+    container_name: ifound_vue
+    restart: always
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ./ifound:/ifound
+    working_dir: /ifound
+    command: ./run.sh server-docker
+    profiles:
+      - all
+      - development

@@ -12,7 +12,7 @@ class Payments(Base):
     receiver_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     amount = Column(Integer, nullable=False)
     scheduled_date = Column(Date, nullable=False)
-    pay_on_schedule = Column(Boolean, nullable=True)
+    on_schedule = Column(Boolean, nullable=True)
     paid = Column(Boolean, nullable=False)
     description = Column(String(255), nullable=False)
     approved = Column(String(255), nullable=False)
