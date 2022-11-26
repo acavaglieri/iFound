@@ -8,7 +8,7 @@ class PaymentBase(BaseModel):
     receiver_id: int
     amount: int
     scheduled_date: date
-    pay_on_schedule: bool
+    on_schedule: bool
     paid: bool
     description: str
     approved: str
@@ -54,7 +54,7 @@ class PaymentCreateRequest(BaseModel):
 class PaymentUpdateRequest(BaseModel):
     receiver_id: Optional[int] = None
     amount: Optional[int] = None
-    pay_on_schedule: Optional[bool] = None
+    on_schedule: Optional[bool] = None
     scheduled_date: Optional[date] = None
     description: Optional[str] = None
     paid: Optional[bool] = None

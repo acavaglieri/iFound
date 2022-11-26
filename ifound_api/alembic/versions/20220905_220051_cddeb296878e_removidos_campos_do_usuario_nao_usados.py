@@ -74,7 +74,7 @@ def downgrade():
     sa.Column('description', mysql.VARCHAR(length=255), nullable=False),
     sa.Column('created_at', mysql.DATETIME(), nullable=False),
     sa.Column('approved', mysql.VARCHAR(length=255), nullable=False),
-    sa.Column('pay_on_schedule', mysql.TINYINT(display_width=1), autoincrement=False, nullable=True),
+    sa.Column('on_schedule', mysql.TINYINT(display_width=1), autoincrement=False, nullable=True),
     sa.Column('paid', mysql.TINYINT(display_width=1), autoincrement=False, nullable=False),
     sa.ForeignKeyConstraint(['receiver_id'], ['users.id'], name='payments_audit_ibfk_1'),
     sa.PrimaryKeyConstraint('id'),

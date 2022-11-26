@@ -124,12 +124,6 @@ const router = new Router({
           meta: { requiresAuth: true }
         },
         {
-          path: "default/workspace",
-          name: "default_workspace",
-          component: () => import("@/pages/admin-pages/PlgDefaultWorkspaceBalance"),
-          meta: { requiresAuth: true }
-        },
-        {
           path: "profile",
           name: "user_profile",
           component: () => import("@/pages/profile-pages/PlgUserProfile"),
@@ -145,36 +139,6 @@ const router = new Router({
           path: "animais/info",
           name: "animais_info",
           component: () => import("@/pages/profile-pages/PlgTransactionInfo"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/pay",
-          name: "pix_payment",
-          component: () => import("@/pages/pix-pages/PlgPixPayment"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/pay/brcode",
-          name: "pix_copy_paste",
-          component: () => import("@/pages/pix-pages/PlgPixCopyPaste"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/preview/payment",
-          name: "pix_preview_payment",
-          component: () => import("@/pages/pix-pages/PlgPixBrCodePaymentPreview"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/scan/pay",
-          name: "pix_qrcode_scan",
-          component: () => import("@/pages/pix-pages/PlgPixScanQrCode"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/charge",
-          name: "pix_generate_charge",
-          component: () => import("@/pages/pix-pages/PlgPixReceive"),
           meta: { requiresAuth: true }
         },
         {
