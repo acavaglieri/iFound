@@ -39,12 +39,7 @@ export default {
 
   computed: {
     checkRoute() {
-      let routesBlackList = ["pix_qrcode_scan"];
-      if (routesBlackList.includes(this.$route.name)) {
-        return false;
-      } else {
-        return true;
-      }
+      return true;
     },
     checkMobile() {
       let screenWidth = screen.availWidth;

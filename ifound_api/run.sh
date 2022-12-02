@@ -10,119 +10,69 @@ NC='\033[0m' # No Color
 if [ -z "$1" ]; then
     echo "command params:"
     echo "1st param:"
-    echo "server - run server"
-    echo "freeze"
-    echo "running? - check if server is running"
+    echo "server-docker - run server"
     echo "clear - clear logs"
-    echo "ssh - connect in aws ec2 by ssh"
-    echo "deploy";
-    echo "logs - get logs from ec2"
-    echo "version? - how close version?";
+    echo "refresh - add master on develop"
     echo ""
     echo "2st param:"
     echo "production"
     echo "staging"
-    echo ""
-    echo "3st param:"
-    echo "  FOR logs:"
-    echo "  - file to get"
-    echo "  list - list files on server"
-
+    echo "development DEFAULT"
 else
     CMD_RUN=$1
     ENV_MNT=$2
-    EC2_USR=ubuntu
-    FILEGET=$3
-    PEM_KEY=~/.ssh/css-AWS-US-East.pem
 
-    if [ "$ENV_MNT" = "production" ]; then
-        echo "Running in production!!!"
-        ENV_SET="production"
-        BRANCH="master"
-        DNS_EC2=ec2-54-197-188-255.compute-1.amazonaws.com
-
-    elif [ "$ENV_MNT" = "staging" ]; then
-        ENV_SET="staging"
-        BRANCH="develop"
-        echo "There is no enviroment staging"
+    #if empty try get from SO
+    if [ -z "$ENV_MNT" ]; then
+        ENV_MNT=$ENVIRONMENT
     fi
 
-    if [ "$CMD_RUN" = "server" ]; then    
-        echo "Starting Uvicorn Server on development"
-        #https://stackoverflow.com/questions/3510673/find-and-kill-a-process-in-one-line-using-bash-and-regex/3510850
-        echo "Kill any uvicorn"
-        kill -9 $(ps aux | grep '[u]vicorn main:app' | awk '{print $2}')
-        kill -9 $(ps aux | grep 'css/iFound/env/bin/python3.7' | awk '{print $2}')
-        source env/bin/activate
+    if [ "$CMD_RUN" = "server-docker" ]; then  
+        
+        echo -e "${BLUE}Starting Server on docker: $ENV_MNT ${NC}"
         pip3 install -r requirements.txt
+
+        if [ "$SUPER_ECHO" = "True" ]; then   
+            #ECHO from SQLAlchemy return values in python format
+            #SQLAlchemy intentionally does not support full stringification of literal values.
+            #PyMySQL has 'mogrify' method which does it, but SQLALchemy has no HOOK for call it when using ORM insert/update (when it controls the cursor)
+            #So, this script add the print command in the driver in execute method ;)
+            #This is import for fast debug for erros like 1064
+            echo "Set SUPER_ECHO"
+            
+            pymysql_show=$(pip show pymysql)
+            echo -e "${pymysql_show}"
+            if [[ $pymysql_show == *"Version: 1.0.2"* ]]; then
+                echo -e "${BLUE}pymysql Version 1.0.2 OK, for others versions, change the file${NC}"
+                rm /usr/local/lib/python3.9/site-packages/pymysql/cursors.py
+                cp ./scripts/pymysql/cursors.py /usr/local/lib/python3.9/site-packages/pymysql/cursors.py
+            else
+                echo -e "${RED}pymysql Version 1.0.2 NOT OK, check pymysql instalation or check cursors.py file${NC}"
+            fi
+        
+        fi
+
+        if [ "$TRY_RELOAD_DUMP" = "True" ]; then 
+            echo "Loading DUMP"
+            # database take a time to load
+            sleep 30
+            # script his smart to know if already loaded
+            ./scripts/init_db/load_dump.sh
+        fi
+
         alembic upgrade head
-        uvicorn main:app --reload
 
-    elif [ "$CMD_RUN" = "freeze" ]; then    
-        source env/bin/activate
-        pip3 install -r requirements.txt
-        pip3 freeze > requirements.txt
-
-    elif [ "$CMD_RUN" = "running?" ]; then    
-        echo "Check server $DNS_EC2"
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "ps aux | grep /home/ubuntu/iFound/env/bin/gunicorn"  
+        if [ "$ENV_MNT" = "development" ]; then
+            uvicorn main:app --reload --host 0.0.0.0 --port 8000
+        else
+            pip install gunicorn
+            gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 main:app
+            #--access-logfile $HOME_APP/log/paylog_access.log --error-logfile $HOME_APP/log/paylog_general.log main:app
+        fi
 
     elif [ "$CMD_RUN" = "clear" ]; then
-        rm -rf env
         git clean -d -x -f
         find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
-
-    elif [ "$CMD_RUN" = "ssh" ]; then
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2
-
-    elif [ "$CMD_RUN" = "deploy" ]; then
-        echo -e "${ORANGE}deploy on enviroment, kill service and remove assets ${NC}";
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "lsb_release -a"        
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "cd ~/iFound/scripts/aws_infra && ./stop.sh"
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "rm ~/iFound/stop.sh"
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "rm ~/iFound/start.sh"
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "rm ~/iFound/.env"
-
-        echo -e "${ORANGE}get new source code ${NC}";
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "cd ~/iFound &&  git reset --hard HEAD && git clean -f -d && git checkout $BRANCH && git pull"
-
-        echo -e "${ORANGE}copy scripts and set setup ${NC}";
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "cp ~/iFound/scripts/aws_infra/start.sh ~/iFound/start.sh"
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "cp ~/iFound/scripts/aws_infra/stop.sh ~/iFound/stop.sh"
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "cp ~/iFound/.env.$ENV_SET ~/iFound/.env"
-
-        echo -e "${BLUE}start system ${NC}";
-        ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "cd ~/iFound && ./start.sh"
-
-    elif [ "$CMD_RUN" = "logs" ]; then
-        echo -e "${ORANGE}zip files and download${NC}"
-        rm -rf ./log/iFound_$ENV_SET
-        rm ./log/iFound_$ENV_SET.zip
-
-        if [ -z "$FILEGET" ]; then
-            echo -e "${RED}need third param!!${NC}"
-
-        elif [ "$FILEGET" = "list" ]; then
-            ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "ls ~/iFound/log/"
-
-        elif [ "$FILEGET" = "all" ]; then
-            echo "get all files"
-            ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "rm /tmp/iFound_$ENV_SET.zip"
-            ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "zip -j /tmp/iFound_$ENV_SET.zip ~/iFound/log/*"
-            sftp -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2:"/tmp/iFound_$ENV_SET.zip" "./log/iFound_$ENV_SET.zip"            
-
-        else
-            echo "get one file"
-            ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "rm /tmp/iFound_$ENV_SET.zip"
-            ssh -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2 "zip -j /tmp/iFound_$ENV_SET.zip ~/iFound/log/$FILEGET"
-            sftp -o IdentitiesOnly=yes -i $PEM_KEY $EC2_USR@$DNS_EC2:"/tmp/iFound_$ENV_SET.zip" "./log/iFound_$ENV_SET.zip"            
-
-        fi;
-
-        mkdir ./log/iFound_$ENV_SET
-        unzip ./log/iFound_$ENV_SET.zip -d ./log/iFound_$ENV_SET
-
-        echo -e "${BLUE}files ready in ./log/iFound_$ENV_SET${NC}";
 
     elif [ "$CMD_RUN" = "refresh" ]; then
         git checkout develop
@@ -133,46 +83,8 @@ else
         git merge master
         git pull
 
-    elif [ "$CMD_RUN" = "version?" ]; then
-        echo "How to create a version:"
-        echo " Switch on master/develop for production/staging deploy"
-        echo " 1) Change de version in main.py"
-        echo " 2) Check changelog.md, version and date"
-        echo " 3) Commit changes"
-        echo " 4) Create a git tag for the version and push"
-        echo " 5) deploy using this script"
-
-    elif [ "$CMD_RUN" = "prepare_ec2" ]; then
-        echo "only run it in first install, aborted";
-        sftp -i $PEM_KEY $EC2_USR@$DNS_EC2:"/home/$EC2_USR/.ssh" <<< $'put /home/gustavo/.ssh/id_rsa_adm'
-        sftp -i $PEM_KEY $EC2_USR@$DNS_EC2:"/home/$EC2_USR/.ssh" <<< $'put /home/gustavo/.ssh/id_rsa_adm.pub'
-        sftp -i $PEM_KEY $EC2_USR@$DNS_EC2:"/home/$EC2_USR/.ssh" <<< $'put /home/gustavo/.ssh/config_adm_css'
-        ssh -i $PEM_KEY $EC2_USR@$DNS_EC2 "mv /home/$EC2_USR/.ssh/config_adm_css /home/$EC2_USR/.ssh/config"
     else
         echo "nothing to do";
+
     fi
 fi
-
-#### prepare ec2, ubuntu because amazon linux has problems with mariadb
-# sudo apt update
-# sudo apt install git
-# sudo apt install logrotate
-# sudo apt install python3-pip
-# sudo apt install python3.8-venv
-# sudo apt install libpq-dev
-# sudo apt install libmariadb3 libmariadb-dev
-# sudo apt install zip unzip
-# git clone ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/iFound
-# cd ~/iFound
-# python3 -m venv env
-
-#### allow user ubuntu use port 80
-# sudo apt-get install authbind
-# sudo touch /etc/authbind/byport/80
-# sudo chmod 500 /etc/authbind/byport/80
-# sudo chown ubuntu /etc/authbind/byport/80
-
-#### setup logrotate
-# sudo mv /home/ubuntu/iFound/scripts/aws_infra/logrotate/iFound /etc/logrotate.d/iFound
-# sudo chown root:root /etc/logrotate.d/iFound
-# sudo chmod 644 /etc/logrotate.d/iFound

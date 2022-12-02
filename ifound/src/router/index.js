@@ -124,12 +124,6 @@ const router = new Router({
           meta: { requiresAuth: true }
         },
         {
-          path: "default/workspace",
-          name: "default_workspace",
-          component: () => import("@/pages/admin-pages/PlgDefaultWorkspaceBalance"),
-          meta: { requiresAuth: true }
-        },
-        {
           path: "profile",
           name: "user_profile",
           component: () => import("@/pages/profile-pages/PlgUserProfile"),
@@ -148,6 +142,7 @@ const router = new Router({
           meta: { requiresAuth: true }
         },
         {
+<<<<<<< HEAD
           path: "pix/pay",
           name: "pix_payment",
           component: () => import("@/pages/pix-pages/PlgPixPayment"),
@@ -178,6 +173,8 @@ const router = new Router({
           meta: { requiresAuth: true }
         },
         {
+=======
+>>>>>>> 38e25534b96beff635700ebf3f3276473554d92e
           path: "payments",
           name: "payments_table",
           component: () => import("@/pages/payments-pages/PlgPayments"),

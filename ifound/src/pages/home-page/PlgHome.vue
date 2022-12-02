@@ -42,10 +42,6 @@
             Encontrei um animal!
           </b-button>
 
-          <!-- <b-button class="shadow-sm home-button" @click="goToReceive" variant="light">
-            <i class="fa fa-qrcode" style="font-size: 2rem;"></i><br>
-            Receber Pix
-          </b-button> -->
         </transition>
       </div>
     </div>
@@ -86,40 +82,12 @@ export default {
   },
   components: {
 
-    //PlgBankStatement,
-    //PlgAccountBalance,
     Pets,
   },
   mounted() {
     this.environment = process.env.VUE_APP_ENVIRONMENT
     this.version = process.env.VUE_APP_VERSION
   },
-  /*methods: {
-    goToFind() {
-      this.$router.replace({name: 'pix_payment'})
-    },
-    goToReceive() {
-      this.$router.replace({name: 'pix_generate_charge'})
-    },
-    
-    /*seePetInfo() {
-      if (!this.showPetInfoCheck) {
-        this.showPetInfoCheck = true;
-        this.eyeIcon = "mdi mdi-eye-off mdi-36px";
-      } else if (this.showPetInfoCheck) {
-        this.showPetInfoCheck = false;
-        this.eyeIcon = "mdi mdi-eye mdi-36px";
-      }
-    },
-    async getTotals(emit) {
-      this.totalIns = emit["totalIns"];
-      this.totalOuts = emit["totalOuts"];
-    },
-    async calcPercentages(emit) {
-      this.insPercentage = emit["insPercent"];
-      this.outsPercentage = emit["outsPercent"];
-    },
-  },*/
 };
 </script>
 

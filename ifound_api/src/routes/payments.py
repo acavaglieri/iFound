@@ -42,7 +42,7 @@
 #
 #
 #@app.get("/payments/pay/scheduled", tags=["Payments"])
-#def pay_scheduled_payments(current_user: u_schemas.User = Depends(auth.get_current_user)):
+#def scheduled_payments(current_user: u_schemas.User = Depends(auth.get_current_user)):
 #    if current_user.role != "admin":
 #        raise HTTPException(
 #            status_code=403, detail="Você não possui permissão para esse recurso!")
@@ -50,7 +50,7 @@
 #
 #
 #@app.put("/payments/{bank}/pay/{payment_id}", tags=["Payments"], response_model=s_schemas.StatusModel,  dependencies=[Depends(auth.valid_ability_user)])
-#def pay_payment(payment_id: int, bank: str, db: Session = Depends(get_db), current_user: u_schemas.User = Depends(auth.get_current_user), new_payment_data: p_schemas.PaymentUpdateRequest = Body(..., embed=True)):
+#def payment(payment_id: int, bank: str, db: Session = Depends(get_db), current_user: u_schemas.User = Depends(auth.get_current_user), new_payment_data: p_schemas.PaymentUpdateRequest = Body(..., embed=True)):
 #    payment = p_cruds.get_payment_by_id(db, payment_id)
 #    receiver = u_cruds.get_user_by_id(db, payment.receiver_id)
 #    transaction_dict = {

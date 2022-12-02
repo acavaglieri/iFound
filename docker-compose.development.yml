@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  ifound_portainer:
+    ports:
+      - 9000:9000
+  ifound_mariadb:
+    environment:
+      - MARIADB_DATABASE=ifound_development
+      - MARIADB_USER=root
+      - MARIADB_ROOT_PASSWORD=root
+      - TZ=America/Sao_Paulo
+    ports:
+      - 53306:3306
+  ifound_fastapi:
+    environment:
+      - MARIADB_DATABASE=ifound_development
+      - MARIADB_USER=root
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_HOST=ifound_mariadb
+      - ENVIRONMENT=development
+      - DATABASE_URL=mariadb+mariadbconnector://root:root@ifound_mariadb:3306/ifound_development
+    ports:
+      - 8000:8000
+  ifound_vue:
+    environment:
+      - VUE_APP_VERSION=0.0.1
+      - VUE_APP_ENVIRONMENT=development
+      - VUE_APP_API_URL=http://localhost:8000
+    ports:
+      - 8080:8080
