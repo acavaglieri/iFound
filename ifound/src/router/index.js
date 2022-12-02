@@ -142,39 +142,7 @@ const router = new Router({
           meta: { requiresAuth: true }
         },
         {
-<<<<<<< HEAD
-          path: "pix/pay",
-          name: "pix_payment",
-          component: () => import("@/pages/pix-pages/PlgPixPayment"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/pay/brcode",
-          name: "pix_copy_paste",
-          component: () => import("@/pages/pix-pages/PlgPixCopyPaste"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/preview/payment",
-          name: "preview_pet",
-          component: () => import("@/pages/pix-pages/PlgPixBrCodePaymentPreview"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/scan/pay",
-          name: "pix_qrcode_scan",
-          component: () => import("@/pages/pix-pages/PlgPixScanQrCode"),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: "pix/charge",
-          name: "pix_generate_charge",
-          component: () => import("@/pages/pix-pages/PlgPixReceive"),
-          meta: { requiresAuth: true }
-        },
-        {
-=======
->>>>>>> 38e25534b96beff635700ebf3f3276473554d92e
+
           path: "payments",
           name: "payments_table",
           component: () => import("@/pages/payments-pages/PlgPayments"),
