@@ -161,7 +161,7 @@ const router = new Router({
         },
         {
           path: "pix/preview/payment",
-          name: "pix_preview_payment",
+          name: "preview_pet",
           component: () => import("@/pages/pix-pages/PlgPixBrCodePaymentPreview"),
           meta: { requiresAuth: true }
         },

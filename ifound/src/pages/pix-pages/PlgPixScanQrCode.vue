@@ -30,9 +30,9 @@
 
 <script>
 //import customValidators from "../plugins/vuelidateValidators";
-import PlgBankServicesApi from '../../apis/PlgBankServicesApi.vue';
+//import PlgBankServicesApi from '../../apis/PlgBankServicesApi.vue';
 import { StreamBarcodeReader } from "vue-barcode-reader";
-import Toasts from '../../components/Toasts.vue';
+//import Toasts from '../../components/Toasts.vue';
 
 
 export default {
@@ -44,8 +44,8 @@ export default {
     }
   },
   components: {
-    PlgBankServicesApi,
-    Toasts,
+    //PlgBankServicesApi,
+    //Toasts,
     StreamBarcodeReader,
   },
   methods: {
@@ -64,7 +64,7 @@ export default {
   },
   watch: {
     code() {
-      this.$router.push({name: 'pix_preview_payment', params: {brCode: this.code}})
+      this.$router.push({name: 'preview_pet', params: {brCode: this.code}})
     }
   }
 }

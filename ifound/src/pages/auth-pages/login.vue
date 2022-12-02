@@ -182,24 +182,26 @@ export default {
             this.isLoading = false;
             this.$emit("authenticated", true);
             localStorage.setItem("access_token", response.data.access_token)
-            this.setLocalStorage(true, response.data.user.email, response.data.user.role, response.data.user.workspace, response.data.user.name);
+            this.setLocalStorage(true, response.data.user.email, response.data.cellphone, response.data.user.role, response.data.user.workspace, response.data.user.name);
             this.$ability.update(getAbilities());
             this.$router.replace({name: 'home'});
           }
         }
       }
     },
-    setLocalStorage(authenticated, email, role, workspace, name){
+    setLocalStorage(authenticated, email, role, workspace, name, cellphone){
       localStorage.setItem('authenticated', authenticated);
       localStorage.setItem('email', email);
       localStorage.setItem('role', role);
       localStorage.setItem('workspace', workspace);
       localStorage.setItem('name', name);
+      localStorage.setItem('cellphone',cellphone);
     },
     deleteLocalStorage(){
       localStorage.removeItem('authenticated');
       localStorage.removeItem('email');
       localStorage.removeItem('name');
+      //localStorage.removeItem('cellphone');
     },
   }
 }

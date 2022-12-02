@@ -129,7 +129,9 @@ export default {
       localStorage.removeItem('email');
       localStorage.removeItem('name');
       localStorage.removeItem('role');
-      localStorage.removeItem('workspace');
+      localStorage.removeItem('workspace'); 
+      localStorage.removeItem('cellphone'); 
+
       this.$router.replace({ name: "login" }).catch(err => err);
     },
     goToProfile(){
@@ -193,6 +195,7 @@ export default {
       localStorage.removeItem('email');
       localStorage.removeItem('name');
       localStorage.removeItem('role');
+      localStorage.removeItem('cellphone');
     },
   },
 

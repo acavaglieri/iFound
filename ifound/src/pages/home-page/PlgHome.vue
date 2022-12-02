@@ -5,14 +5,15 @@
         <transition name="slide-up" appear>
           <b-row class="mb-2">
             <b-col md="9" cols="5" class="p-0">
+              <h3 class="font-weight-bold">Olá {{ name }} </h3>
               <!--<h3 class="font-weight-bold">Olá {{ user.name }} </h3>-->
               <span class="text-left text-muted">
-                <div>
+                <!--<div>
                   Olá {{ name }}
                 </div>
                 <div>
                   Olá {{ email }}
-                </div>
+                </div>-->
               </span>
             </b-col>
             <b-col md="2" cols="4" class="text-right d-flex justify-content-end my-2">

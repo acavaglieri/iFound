@@ -131,16 +131,18 @@ export default {
       }
     },
 
-    setLocalStorage(authenticated,email,name){
+    setLocalStorage(authenticated,email,name,cellphone ){
       localStorage.setItem('authenticated',authenticated);
       localStorage.setItem('email',email);
       localStorage.setItem('name',name);
+      localStorage.setItem('cellphone',cellphone);
     },
 
     getLocalStorageAndInjectOnmockAccount(){
       var mockAccount = {
         email: localStorage.getItem('email'),
         name: localStorage.getItem('name'),
+        cellphone: localStorage.getItem('cellphone'),
       }
       this.mockAccount = mockAccount;
     }

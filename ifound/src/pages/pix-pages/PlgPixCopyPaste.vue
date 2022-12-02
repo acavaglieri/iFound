@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async payByBrCode() {
-      this.$router.push({name: 'pix_preview_payment', params: {brCode: this.paymentForm.brCode}})
+      this.$router.push({name: 'preview_pet', params: {brCode: this.paymentForm.brCode}})
     },
   },
 };

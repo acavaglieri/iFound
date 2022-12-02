@@ -13,7 +13,7 @@
             <tr>
               <th scope="col ">Nome</th>
               <th scope="col">Raça/Tipo</th>
-              <th scope="col">ID-Teste</th>
+              <!--<th scope="col">ID-Teste</th>-->
               <th scope="col">Vacinado contra raiva</th>
               <th scope="col">QR-Code</th>
               <th></th>
@@ -23,13 +23,14 @@
             <tr v-for="(pet, index) in pets" :key="index">
               <td>{{ pet.nome }}</td>
               <td>{{ pet.raca }}</td>
-              <td>{{ pet.id }}</td>   
+              <!--<td>{{ pet.id }}</td>-->   
+
               <td>
                 <span v-if="pet.vacinado">Sim</span>
                 <span v-else>Não</span>
               </td>
               <td>
-                <vue-qrcode :value="pet.id" :options="{ width: 200 }"></vue-qrcode>
+                <vue-qrcode :value="'-----Animal-----'+'\n Nome:'+pet.nome+'\n Raça: '+ pet.raca + '\n-----Tutor-----'+ '\n Nome: ' + name + '\n Email: ' + email +'\n Telefone: ' + cellphone " :options="{ width: 200 }"></vue-qrcode>
               </td>
               <td>
                 <div class="btn-group" role="group">
@@ -138,13 +139,17 @@ import VueQrcode from '@chenfengyuan/vue-qrcode';
 export default {
   data() {
     return {
-      teste: 'pedro',
+      teste: 'Amanda',
+      cellphone: localStorage.getItem('cellphone'),
+      name: localStorage.getItem('name'),
+      email: localStorage.getItem('email'),
       pets: [],
       addPetForm: {
         nome: '',
         raca: '',
         vacinado: [],
         QRValue: '',
+
       },
       message: '',    
       showMessage: false,
@@ -153,6 +158,10 @@ export default {
   components: {
     alert: Alert,
     VueQrcode,
+  },
+  mounted() {
+    this.environment = process.env.VUE_APP_ENVIRONMENT
+    this.version = process.env.VUE_APP_VERSION
   },
   created() {
     this.getPets();
