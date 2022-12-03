@@ -25,7 +25,7 @@ def html_message(message_type, url, first_name, token):
                     <div style="margin: 5em;">
                         <div style="color: #fff">
                             <h1 style="color: #111">Olá, {}!</h1>
-                            <h3 style="color: #111;">Seja bem vindo ao Paylog! Antes de continuar, você ainda precisa confirmar a sua conta.</h3>
+                            <h3 style="color: #111;">Seja bem vindo ao Ifound! Antes de continuar, você ainda precisa confirmar a sua conta.</h3>
                             <h4 style="color: #111;">Clique no link abaixo para prosseguir:</h4>
                             <a href="{}user/confirm?token={}">Confirme sua conta</a><br>
                         </div>

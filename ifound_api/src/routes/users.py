@@ -87,7 +87,7 @@ def register_user(user: u_schemas.UserCreate = Body(..., embed=True), db: Sessio
         db_user = u_crud.register_user(db, user)
         if db_user:
             email_data = u_crud.generate_email_data(user, "register")
-            # sent_email_status = email_sender.email_sender(user.email, email_data["message"], "Confirmação de Conta Paylog")
+            # sent_email_status = email_sender.email_sender(user.email, email_data["message"], "Confirmação de Conta Ifound")
             # if sent_email_status == "success":            
             u_crud.insert_user_token(db, user.email, email_data["token"])
             added_user = u_crud.get_user_by_email(db, user.email)
