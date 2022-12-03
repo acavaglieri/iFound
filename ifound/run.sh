@@ -11,8 +11,18 @@ else
     if [ "$CMD_RUN" = "server-docker" ]; then
         echo "Install dependencies"
         npm install
-        echo "Start server"
-        npm run serve
+        
+        if [ "$ENV_MNT" = "development" ]; then
+            echo "Start server"
+            npm run serve
+
+        else
+            echo "Build"
+            npm run build
+            echo "Provide static files in "$HOST
+            http-server -a $HOST dist
+
+        fi
 
     elif [ "$CMD_RUN" = "refresh" ]; then
         git checkout develop

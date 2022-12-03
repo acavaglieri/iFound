@@ -1,0 +1,3 @@
+volumes/*
+ifound/node_modules
+ifound/dist
