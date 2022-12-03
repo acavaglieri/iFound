@@ -17,7 +17,7 @@ def email_sender(receiver_email: str, message_html: str, topic: str):
     password = os.environ["EMAIL_PASS"]
     message = MIMEMultipart("alternative")
     message['Subject'] = topic
-    message['From'] = "Equipe Paylog"
+    message['From'] = "Equipe Ifound"
     message['To'] = receiver_email
 
     html = MIMEText(message_html, 'html')

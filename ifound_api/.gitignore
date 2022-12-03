@@ -1,0 +1,17 @@
+# VScode Settings
+.vscode
+
+# Python's Virtual Environment
+env
+
+# Environment Variables
+.env
+.env.*
+
+# Pychache
+__pycache__/
+
+#logs
+/log/*
+gunicorn.pid
+/src/services/*.log

@@ -67,7 +67,6 @@ else
         else
             pip install gunicorn
             gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 main:app
-            #--access-logfile $HOME_APP/log/paylog_access.log --error-logfile $HOME_APP/log/paylog_general.log main:app
         fi
 
     elif [ "$CMD_RUN" = "clear" ]; then

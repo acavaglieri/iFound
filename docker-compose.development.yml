@@ -19,7 +19,13 @@ services:
       - MARIADB_ROOT_PASSWORD=root
       - MARIADB_HOST=ifound_mariadb
       - ENVIRONMENT=development
-      - DATABASE_URL=mariadb+mariadbconnector://root:root@ifound_mariadb:3306/ifound_development
+      - DATABASE_URL=mysql+pymysql://root:root@ifound_mariadb:3306/ifound_development
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - SECRET_KEY=boauw3enaeipb39
+      - ALGORITHM=HS256
+      - ECHO=False
+      - SUPER_ECHO=False
+      - TRY_RELOAD_DUMP=True
     ports:
       - 8000:8000
   ifound_vue:
