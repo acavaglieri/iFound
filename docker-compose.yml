@@ -6,6 +6,8 @@ networks:
 services:
   ifound_portainer:
     image: portainer/portainer-ce:latest
+    stdin_open: true # docker run -i
+    tty: true        # docker ru
     container_name: ifound_portainer
     restart: unless-stopped
     environment:
@@ -20,10 +22,11 @@ services:
       - net-traefik
     profiles:
       - all
-      - staging
       - production
   ifound_mariadb:
     image: mariadb:10.3.36
+    stdin_open: true # docker run -i
+    tty: true        # docker ru
     container_name: ifound_mariadb
     restart: always
     volumes:
@@ -34,25 +37,28 @@ services:
     profiles:
       - all
       - development
-      - staging
+      - production
   ifound_fastapi:
     build: ifound_api
+    stdin_open: true # docker run -i
+    tty: true        # docker ru
     container_name: ifound_fastapi
     restart: always
     volumes:
       - ./ifound_api:/ifound_api
     networks:
-      - net-mariadb
       - net-traefik
+      - net-mariadb
     working_dir: /ifound_api
     command: ./run.sh server-docker
     profiles:
       - all
       - development
-      - staging
       - production
   ifound_traefik:
     image: traefik:v2.8.7
+    stdin_open: true # docker run -i
+    tty: true        # docker ru
     container_name: ifound_traefik
     restart: always
     environment:
@@ -76,10 +82,11 @@ services:
       - --api.insecure=true
     profiles:
       - all
-      - staging
       - production
   ifound_vue:
-    image: node:14.19.2-buster-slim
+    build: ifound
+    stdin_open: true # docker run -i
+    tty: true        # docker ru
     container_name: ifound_vue
     restart: always
     environment:
@@ -87,7 +94,10 @@ services:
     volumes:
       - ./ifound:/ifound
     working_dir: /ifound
+    networks:
+      - net-traefik
     command: ./run.sh server-docker
     profiles:
       - all
       - development
+      - production

@@ -32,26 +32,6 @@ else
         echo -e "${BLUE}Starting Server on docker: $ENV_MNT ${NC}"
         pip3 install -r requirements.txt
 
-        if [ "$SUPER_ECHO" = "True" ]; then   
-            #ECHO from SQLAlchemy return values in python format
-            #SQLAlchemy intentionally does not support full stringification of literal values.
-            #PyMySQL has 'mogrify' method which does it, but SQLALchemy has no HOOK for call it when using ORM insert/update (when it controls the cursor)
-            #So, this script add the print command in the driver in execute method ;)
-            #This is import for fast debug for erros like 1064
-            echo "Set SUPER_ECHO"
-            
-            pymysql_show=$(pip show pymysql)
-            echo -e "${pymysql_show}"
-            if [[ $pymysql_show == *"Version: 1.0.2"* ]]; then
-                echo -e "${BLUE}pymysql Version 1.0.2 OK, for others versions, change the file${NC}"
-                rm /usr/local/lib/python3.9/site-packages/pymysql/cursors.py
-                cp ./scripts/pymysql/cursors.py /usr/local/lib/python3.9/site-packages/pymysql/cursors.py
-            else
-                echo -e "${RED}pymysql Version 1.0.2 NOT OK, check pymysql instalation or check cursors.py file${NC}"
-            fi
-        
-        fi
-
         if [ "$TRY_RELOAD_DUMP" = "True" ]; then 
             echo "Loading DUMP"
             # database take a time to load

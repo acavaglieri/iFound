@@ -22,29 +22,29 @@ if [ -z "$1" ]; then
     echo "sftp - sftp to host container"
     echo "deploy - deploy on enviroment"
     echo "refresh - add master on develop"
+    echo "static - bind static files (need container name)"
     echo ""
     echo "2nd param:"
     echo "production (master)"
     echo "staging (develop)"
     echo "development (develop) DEFAULT"
+    echo ""
+    echo "3rd param:"
+    echo "container name"
+    echo ""
+    echo "4th param:"
+    echo "pem key"
+    echo ""
+    echo "5th param:"
+    echo "dns ec2"
 
 else
     CMD_RUN=$1
     ENV_MNT=$2
+    CONTAINER=$3
     EC2_USR=ubuntu
-    PEM_KEY=~/.ssh/x
-
-    if [ "$ENV_MNT" = "production" ]; then
-        echo "Running in production!!!"
-        ENV_SET="production"
-        BRANCH="master"
-
-    else
-        ENV_MNT="development"
-        ENV_SET="development"
-        BRANCH="develop"
-
-    fi
+    PEM_KEY=$4
+    DNS_EC2=$5
 
     eval `ssh-agent -s`
     ssh-add
@@ -74,23 +74,6 @@ else
         echo -e "${RED}STOP Compose${NC}";
         docker compose --profile $ENV_MNT -f docker-compose.yml -f docker-compose.$ENV_MNT.yml down
 
-    elif [ "$CMD_RUN" = "load" ]; then
-        echo -e "${BLUE}Init Submodules${NC}";
-        git submodule update --init --recursive
-
-    elif [[ "$CMD_RUN" = "checkout" ]] || [[ "$CMD_RUN" = "force-checkout" ]]; then
-        echo -e "${GREEN}Checkout${NC}";
-        git checkout $BRANCH
-        git pull
-        if [ "$CMD_RUN" = "checkout" ]; then
-            git submodule foreach "(git checkout "$BRANCH"; git pull)&"
-        else
-            echo -e "${RED}Force reset HEAD${NC}";
-            echo "Reset HEAD"
-            git reset --hard HEAD
-            git submodule foreach "(git reset --hard HEAD; git checkout "$BRANCH"; git pull)&"
-        fi
-
     elif [[ "$CMD_RUN" = "ssh" ]] || [[ "$CMD_RUN" = "sftp" ]]; then        
         if [ "$CMD_RUN" = "ssh" ]; then
             echo -e "${GREEN}Open SSH${NC}";
@@ -106,8 +89,17 @@ else
         echo -e "${ORANGE}server ${NC}";
         ssh -i $PEM_KEY $EC2_USR@$DNS_EC2 "lsb_release -a"        
 
+        echo -e "${ORANGE}compress current dir ${NC}";
+        rm iFound.tar.gz
+        COPYFILE_DISABLE=true tar -c --exclude-from=.tarignore -zf iFound.tar.gz *
+
+        echo -e "${RED}delete old source ${NC}";
+        ssh -i $PEM_KEY $EC2_USR@$DNS_EC2 "sudo rm -rf iFound*"
+
         echo -e "${ORANGE}get new source code ${NC}";
-        ssh -i $PEM_KEY $EC2_USR@$DNS_EC2 "cd iFound && ./run.sh force-checkout $ENV_MNT"
+        SFTP_CMD="put iFound.tar.gz"
+        sftp -i $PEM_KEY $EC2_USR@$DNS_EC2 :. <<< $SFTP_CMD
+        ssh -i $PEM_KEY $EC2_USR@$DNS_EC2 "mkdir iFound && tar -zxf iFound.tar.gz -C iFound && rm -rf iFound.tar.gz"
 
         echo -e "${BLUE}restarting system ${NC}";
         #up -d apenas atualiza containers que foram alterados, restart não pega novas enviroments variables
@@ -115,6 +107,10 @@ else
 
         echo -e "${GREEN}status ${NC}";
         ssh -i $PEM_KEY $EC2_USR@$DNS_EC2 "cd iFound && docker ps"
+
+    elif [ "$CMD_RUN" = "static" ]; then
+        echo -e "${GREEN}generate static files ${NC}";
+        docker compose --profile $ENV_MNT -f docker-compose.yml -f docker-compose.$ENV_MNT.yml run $CONTAINER ./run.sh static
 
     else
         echo "nothing to do";

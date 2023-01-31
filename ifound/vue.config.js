@@ -12,5 +12,9 @@ module.exports = {
     workboxOptions: {
       skipWaiting: true
     }
+  },
+
+  devServer: {
+    disableHostCheck: true
   }
 };

@@ -23,8 +23,6 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=1440
       - SECRET_KEY=boauw3enaeipb39
       - ALGORITHM=HS256
-      - ECHO=False
-      - SUPER_ECHO=False
       - TRY_RELOAD_DUMP=True
     ports:
       - 8000:8000
@@ -33,5 +31,9 @@ services:
       - VUE_APP_VERSION=0.0.1
       - VUE_APP_ENVIRONMENT=development
       - VUE_APP_API_URL=http://localhost:8000
+      - HOST=0.0.0.0
+      - PORT=8080
+      - NODE_ENV=development #because devDependencies in package.json
+      - ENV_MNT=development
     ports:
       - 8080:8080
