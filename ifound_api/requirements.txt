@@ -55,7 +55,7 @@ rsa==4.8
 six==1.16.0
 SQLAlchemy==1.4.22
 starkbank==2.13.0
-starkbank-ecdsa==1.0.0
+starkbank-ecdsa==2.0.1
 starlette==0.14.2
 toml==0.10.2
 traitlets==5.1.1
